@@ -1,0 +1,13 @@
+server:
+  port:
+  env:
+
+database:
+  dbname:
+  dbuser:
+  dbpassword:
+  dbhost:
+  dbport:
+
+jwt:
+  secretkey: "nvodbebfejfbowbeovfbqvofebfoueqbfoeqbvfoeuqvbfeiqvf"
