@@ -1,24 +1,26 @@
 package tests
 
 import (
-	"go-todo/api"
-	cfg "go-todo/config"
-	"go-todo/core/db"
-	"gorm.io/gorm"
+	"github.com/gin-gonic/gin"
+	"go-todo/models"
+	"go-todo/pkg/settings"
+	"go-todo/routers"
 	"os"
 	"testing"
 )
 
-var app *api.Server
-var Config *cfg.Configurations
-var TestDB *gorm.DB
+var r *gin.Engine
 
-func TestMain(m *testing.M) {
-	os.Exit(testMain(m))
+func init() {
+	settings.InitSettings()
+	models.Setup()
 }
 
 func testMain(m *testing.M) int {
-	Config, _ = cfg.Init("../.")
-	TestDB = db.InitDB(Config.Database)
+	r = routers.InitRourter()
 	return m.Run()
+}
+
+func TestMain(m *testing.M) {
+	os.Exit(testMain(m))
 }
