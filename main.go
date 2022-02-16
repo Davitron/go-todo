@@ -2,20 +2,31 @@ package main
 
 import (
 	"fmt"
-	"go-todo/api"
-	c "go-todo/config"
-	"go-todo/core/db"
+	"go-todo/models"
+	"go-todo/pkg/settings"
+	"go-todo/routers"
 	"log"
+	"net/http"
 )
 
+func init() {
+	fmt.Println("here")
+	settings.InitSettings()
+	models.Setup()
+}
+
 func main() {
-	config, _ := c.Init(".")
-	port := config.Server.Port
-	serverAddress := fmt.Sprintf("0.0.0.0:%s", port)
-	DB := db.InitDB(config.Database)
-	server := api.NewServer(DB, config)
-	err := server.Start(serverAddress)
-	if err != nil {
-		log.Fatal("cannot create server:", err)
+	fmt.Println(settings.AppSettings)
+	endPoint := fmt.Sprintf(":%s", settings.AppSettings.Server.Port)
+	fmt.Println(endPoint)
+	routersInit := routers.InitRourter()
+	s := &http.Server{
+		Addr:           endPoint,
+		Handler:        routersInit,
+		ReadTimeout:    0,
+		WriteTimeout:   0,
+		MaxHeaderBytes: 0,
 	}
+	log.Printf("[info] start http server listening on %s", endPoint)
+	log.Fatalf("Error starting server:, %s ", s.ListenAndServe())
 }
